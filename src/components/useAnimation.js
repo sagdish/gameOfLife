@@ -5,12 +5,12 @@ const useAnimation = (timestamp, doAnimationCallBack) => {
   const [ continueAnimation, setContinueAnimation ] = useState( true );
   const [ started, setStarted ] = useState( false );
 
-  useEffect( () => {
+  useEffect(() => {
     if(!started) {
       setStarted(true);
       requestAnimationFrame(onFrame);
     }
-  }, [ started ]);
+  }, [started]);
 
   const onFrame = ( timestamp ) => {
     if (continueAnimation) {
