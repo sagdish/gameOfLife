@@ -4,10 +4,13 @@ import moment from 'moment';
 import {useAnimeFrame} from './useAnimation';
 
 function Game(props) {
+  const [startGame, setStartGame] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [playing, setPlaying] = useState(false)
 
   const canvasRef = useRef(null);
 
-  const resolution = 40;
+  const resolution = 20;
   const colums = props.width / resolution
   const rows = props.height / resolution
   
@@ -38,6 +41,13 @@ function Game(props) {
     }
   }
 
+  let refAnim = useRef(null)
+  let timerRef = useRef(null)
+
+  useEffect(()=> {
+    let grid = buildGrid();
+  }, [refresh])
+  
   useEffect(() => {
     let grid = buildGrid();
 
@@ -45,13 +55,27 @@ function Game(props) {
     const context = canvas.getContext('2d');
 
     requestAnimationFrame(update)
-    function update() {
+    function update(args) {
+      // console.log(args)
       grid = nextGen(grid);
       drawGrid(grid, context);
-      requestAnimationFrame(update)
+      if (startGame) {
+        timerRef.current = setTimeout(function(){
+          refAnim.current = requestAnimationFrame(update)
+          console.log(refAnim.current)
+        }, 100)
+      }
     }
 
   })
+
+  function cancelAnimation() {
+    // cancelAnimationFrame(refAnim.current)
+    clearTimeout(timerRef.current)
+    console.log('inside of cancelAnimation', refAnim)
+    console.log('reached')
+    setStartGame(false)
+  }
 
   // used
   const nextGen = (grid) => {
@@ -91,23 +115,34 @@ function Game(props) {
 
     return nextGrid;
   }
-  
 
-  
-  // const doAnimation = elapsedTime => {
-  //   console.log('elapsed time: ', elapsedTime);
-  //   console.log(canvasRef.current);
-  // };
-
-  // const [cancelAnimation] = useAnimeFrame(moment.now(), doAnimation);
-
-  // const stopCanvas = () => {
-  //   cancelAnimation();
-  // }
+  console.log(startGame)
 
   return (
     <div>
-      {/* <button onClick={stopCanvas}>Stop</button> */}
+      <button disabled={startGame ? true : false} 
+        onClick={() =>setStartGame(true)}
+      > Start
+      </button>
+      
+      <button 
+        disabled={startGame ? false : true}
+        onClick={() => { 
+        cancelAnimation()
+        } }>Stop
+        </button>
+
+
+        
+      <button
+        disabled={startGame ? true : false} 
+        onClick={() => {
+          setRefresh(!refresh)
+          setStartGame(false)
+          setPlaying(false)
+          }}
+      >Randomize Live Cells
+      </button>
       <canvas ref={canvasRef} width={props.width} height={props.height} />
     </div>
   );
