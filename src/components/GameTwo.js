@@ -4,13 +4,14 @@ import moment from 'moment';
 import {useAnimeFrame} from './useAnimation';
 
 function Game(props) {
-  const [ stopAnimation, setStopAnimation ] = useState(false);
 
   const canvasRef = useRef(null);
 
   const resolution = 40;
   const colums = props.width / resolution
   const rows = props.height / resolution
+  
+  // initial function to build twodimmensional array:
   const buildGrid = () => {
     const twoDimArr = new Array(colums).fill(null).map(
       () => new Array(rows).fill(null)
@@ -23,9 +24,6 @@ function Game(props) {
     }
     return twoDimArr;
   }
-
-  let grid = buildGrid();
-  console.log(grid);
 
   const drawGrid = (grid, context) => {
     for (let col = 0; col < grid.length; col++) {
@@ -41,14 +39,21 @@ function Game(props) {
   }
 
   useEffect(() => {
+    let grid = buildGrid();
+
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    drawGrid(grid, context)
-  }, [])
 
-  useEffect(() => {})
+    requestAnimationFrame(update)
+    function update() {
+      grid = nextGen(grid);
+      drawGrid(grid, context);
+      requestAnimationFrame(update)
+    }
 
-  
+  })
+
+  // used
   const nextGen = (grid) => {
     const nextGrid = grid.map(arr => [...arr])
 
