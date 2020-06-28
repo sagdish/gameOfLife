@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <h1>Game</h1>
       {/* <Game width={400} height={400}/> */}
-      <GameTwo width={800} height={800}/>
+      <GameTwo width={600} height={600}/>
     </div>
   );
 }

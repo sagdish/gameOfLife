@@ -119,30 +119,30 @@ function Game(props) {
   console.log(startGame)
 
   return (
-    <div>
-      <button disabled={startGame ? true : false} 
-        onClick={() =>setStartGame(true)}
-      > Start
-      </button>
-      
-      <button 
-        disabled={startGame ? false : true}
-        onClick={() => { 
-        cancelAnimation()
-        } }>Stop
+    <div className='container'>
+      <div className='buttons'>
+        <button disabled={startGame ? true : false} 
+          onClick={() =>setStartGame(true)}
+        > Start
         </button>
-
-
         
-      <button
-        disabled={startGame ? true : false} 
-        onClick={() => {
-          setRefresh(!refresh)
-          setStartGame(false)
-          setPlaying(false)
-          }}
-      >Randomize Live Cells
-      </button>
+        <button 
+          disabled={startGame ? false : true}
+          onClick={() => { 
+          cancelAnimation()
+          } }>Stop
+          </button>
+          
+        <button
+          disabled={startGame ? true : false} 
+          onClick={() => {
+            setRefresh(!refresh)
+            setStartGame(false)
+            setPlaying(false)
+            }}
+        >Randomize Live Cells
+        </button>
+      </div>
       <canvas ref={canvasRef} width={props.width} height={props.height} />
     </div>
   );
